@@ -40,7 +40,7 @@
 ### Clone the repository
 
 ```bash
-git clone https://github.com/HackerG3121/Zero-AI.git
+git clone https://github.com/HackerG3121/Zero-AI3121.git
 ```
 
 ### Backend
