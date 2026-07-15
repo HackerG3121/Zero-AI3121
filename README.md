@@ -48,6 +48,11 @@ git clone https://github.com/HackerG3121/Zero-AI3121.git
 ```bash
 cd backend
 pip install -r requirements.txt
+copy .env.example .env
+```
+open .env file then Enter your API key
+
+```bash
 uvicorn main:app --reload
 ```
 
@@ -55,8 +60,7 @@ uvicorn main:app --reload
 
 ```bash
 cd frontend
-npm install
-npm run dev
+python -m http.server 5500
 ```
 
 Open the application in your browser after the frontend starts.
