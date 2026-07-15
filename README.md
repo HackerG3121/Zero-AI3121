@@ -40,7 +40,7 @@
 ### Clone the repository
 
 ```bash
-git clone https://github.com/dhatchanamoorthy444/Zero-AI.git
+git clone https://github.com/HackerG3121/Zero-AI.git
 ```
 
 ### Backend
@@ -93,7 +93,8 @@ Zero AI is developed to simplify access to college-related information by provid
 
 ## 👨‍💻 Developer
 
-**Dhatchana Moorthy**
+* **Dhatchanamoorthy V**
+* **Giri A**
 
 Department of CSE (Cyber Security)
 
