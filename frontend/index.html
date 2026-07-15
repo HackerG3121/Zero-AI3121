@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zero AI | College Student Assistant</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Zero AI is an AI-powered college student assistant providing attendance tracking, daily timetables, assignment reminders, placement drives, and interactive campus directions.">
+  <meta name="theme-color" content="#0b1220">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/x-icon" href="icons/favicon.ico">
+  
+  <!-- Apple Mobile Web App Meta -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Zero AI">
+  <link rel="apple-touch-icon" href="icons/icon-152.png">
+
+  <!-- Google Fonts & Icon Libraries -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- App Container -->
+  <div class="app-layout">
+    
+    <!-- PWA Install Banner -->
+    <div id="installBanner" class="install-banner glass-panel hidden">
+      <div class="banner-content">
+        <i class="bi bi-phone-vibrate-fill accent-color text-2xl"></i>
+        <div>
+          <h4>Install Zero AI</h4>
+          <p>Access college assistant instantly on your home screen with offline support.</p>
+        </div>
+      </div>
+      <div class="banner-actions">
+        <button id="btnInstall" class="btn btn-primary btn-sm">Install</button>
+        <button id="btnDismissInstall" class="btn btn-ghost btn-sm">Later</button>
+      </div>
+    </div>
+
+    <!-- Sidebar Navigation (Desktop) -->
+    <aside class="sidebar glass-panel">
+      <div class="sidebar-header">
+        <div class="logo">
+          <span class="logo-icon">⚡</span>
+          <h2>Zero <span class="logo-gradient">AI</span></h2>
+        </div>
+      </div>
+      
+      <nav class="sidebar-menu">
+        <a href="#home" class="menu-item active" data-tab="home">
+          <i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span>
+        </a>
+        <a href="#chat" class="menu-item" data-tab="chat">
+          <i class="bi bi-chat-left-dots-fill"></i><span>AI Chat</span>
+        </a>
+        <a href="#history" class="menu-item" data-tab="history">
+          <i class="bi bi-clock-history"></i><span>History</span>
+        </a>
+        <a href="#notifications" class="menu-item" data-tab="notifications">
+          <i class="bi bi-bell-fill"></i><span class="nav-noti-indicator">Notifications</span>
+        </a>
+        <a href="#profile" class="menu-item" data-tab="profile">
+          <i class="bi bi-person-badge-fill"></i><span>My Profile</span>
+        </a>
+        <a href="#settings" class="menu-item" data-tab="settings">
+          <i class="bi bi-gear-fill"></i><span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-pill glass-panel">
+          <img src="" id="userPillImg" alt="User Profile" class="avatar-sm">
+          <div class="user-pill-info">
+            <h5 id="userPillName">Alex Mercer</h5>
+            <p>1st Year, CSE</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-container">
+      
+      <!-- Top header bar -->
+      <header class="header glass-panel">
+        <div class="header-left">
+          <h1 id="viewTitle">Dashboard</h1>
+        </div>
+        <div class="header-right">
+          <button id="themeToggle" class="icon-btn" title="Toggle Theme">
+            <i class="bi bi-moon-fill"></i>
+          </button>
+          <button id="quickNotiBtn" class="icon-btn" title="Notifications" data-tab-trigger="notifications">
+            <i class="bi bi-bell"></i>
+            <span class="badge badge-danger" id="notiCount">3</span>
+          </button>
+          <div class="header-profile" data-tab-trigger="profile">
+            <img src="" id="headerAvatar" alt="Profile" class="avatar-md">
+          </div>
+        </div>
+      </header>
+
+      <!-- App Views (Views are toggled dynamically via hash/tabs) -->
+      <div class="view-viewport">
+
+        <!-- 1. DASHBOARD VIEW -->
+        <section id="view-home" class="view-pane active">
+          <div class="welcome-banner glass-panel">
+            <div class="welcome-text">
+              <h2 id="greetingText">Good morning, Alex!</h2>
+              <p>Welcome back. Here is your academic status update for today.</p>
+            </div>
+            <div class="welcome-graphic">
+              <span class="welcome-icon-glow">⚡</span>
+            </div>
+          </div>
+
+          <!-- Stats Quick Summary Grid -->
+          <div class="stats-summary-grid">
+            <div class="stat-card glass-panel" data-tab-trigger="attendance">
+              <div class="stat-header">
+                <span>Overall Attendance</span>
+                <i class="bi bi-pie-chart-fill text-blue"></i>
+              </div>
+              <div class="stat-value"><span id="dashOverallAttendance">78</span>%</div>
+              <div class="progress-bar-container">
+                <div class="progress-bar" id="dashAttendanceProgress" style="width: 78%"></div>
+              </div>
+              <p class="stat-desc" id="dashAttendanceAlert">Requirement is 75%</p>
+            </div>
+
+            <div class="stat-card glass-panel" data-tab-trigger="timetable">
+              <div class="stat-header">
+                <span>Next Lecture</span>
+                <i class="bi bi-clock-fill text-indigo"></i>
+              </div>
+              <div class="stat-value text-md" id="dashNextClass">Mathematics-I</div>
+              <p class="stat-desc mt-2"><i class="bi bi-geo-alt-fill"></i> <span id="dashNextClassRoom">Room A-302</span></p>
+            </div>
+
+            <div class="stat-card glass-panel" data-tab-trigger="assignments">
+              <div class="stat-header">
+                <span>Pending Work</span>
+                <i class="bi bi-file-earmark-text-fill text-purple"></i>
+              </div>
+              <div class="stat-value"><span id="dashPendingAssignments">4</span></div>
+              <p class="stat-desc text-warning" id="dashAssignmentAlert">Urgent submissions pending</p>
+            </div>
+
+            <div class="stat-card glass-panel" data-tab-trigger="exams">
+              <div class="stat-header">
+                <span>Exams Countdown</span>
+                <i class="bi bi-calendar-event-fill text-cyan"></i>
+              </div>
+              <div class="stat-value"><span id="dashExamCountdown">7</span> <span class="text-sm font-normal">Days</span></div>
+              <p class="stat-desc">Internal Assessment 2</p>
+            </div>
+          </div>
+
+          <!-- Quick Action Cards Grid -->
+          <div class="quick-actions-section">
+            <h3 class="section-title">Quick Academic Actions</h3>
+            <div class="quick-actions-grid">
+              <div class="action-card glass-panel" data-tab-trigger="timetable">
+                <div class="action-icon bg-blue-grad">📅</div>
+                <h4>Timetable</h4>
+                <p>View daily schedules & classroom locations.</p>
+              </div>
+              <div class="action-card glass-panel" data-tab-trigger="attendance">
+                <div class="action-icon bg-indigo-grad">📊</div>
+                <h4>Attendance</h4>
+                <p>Track percentages & warning thresholds.</p>
+              </div>
+              <div class="action-card glass-panel" data-tab-trigger="exams">
+                <div class="action-icon bg-purple-grad">📝</div>
+                <h4>Exams</h4>
+                <p>Schedules, hall tickets, and countdowns.</p>
+              </div>
+              <div class="action-card glass-panel" data-tab-trigger="assignments">
+                <div class="action-icon bg-pink-grad">📚</div>
+                <h4>Assignments</h4>
+                <p>Reminders, instructions, and pending work.</p>
+              </div>
+              <div class="action-card glass-panel" data-tab-trigger="placements">
+                <div class="action-icon bg-teal-grad">💼</div>
+                <h4>Placements</h4>
+                <p>Latest drives, internships & prep tips.</p>
+              </div>
+              <div class="action-card glass-panel" data-tab-trigger="faculty">
+                <div class="action-icon bg-orange-grad">👨‍🏫</div>
+                <h4>Faculty Info</h4>
+                <p>Cabin locations, emails & hours.</p>
+              </div>
+              <div class="action-card glass-panel" data-tab-trigger="navigation">
+                <div class="action-icon bg-cyan-grad">🗺️</div>
+                <h4>Campus Map</h4>
+                <p>Find classes, canteens, cse labs, and library.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. AI CHAT VIEW -->
+        <section id="view-chat" class="view-pane">
+          <div class="chat-wrapper glass-panel">
+            <div class="chat-header">
+              <div class="chat-header-identity">
+                <div class="ai-status-dot-container">
+                  <span class="ai-status-dot active"></span>
+                </div>
+                <div>
+                  <h4>Zero AI Assistant</h4>
+                  <p>Campus Smart Companion</p>
+                </div>
+              </div>
+              <div class="chat-header-actions">
+                <button id="btnExportPdf" class="icon-btn" title="Export Chat to PDF"><i class="bi bi-filetype-pdf"></i></button>
+                <button id="btnDownloadMd" class="icon-btn" title="Download Conversation (.md)"><i class="bi bi-markdown"></i></button>
+                <button id="btnClearChat" class="icon-btn text-danger" title="Clear Conversation"><i class="bi bi-trash3-fill"></i></button>
+              </div>
+            </div>
+            
+            <!-- Chat Logs Container -->
+            <div id="chatMessages" class="chat-messages">
+              <!-- Dynamically populated -->
+              <div class="message system-msg">
+                <div class="msg-bubble glass-panel">
+                  Welcome to Zero AI, Alex! 🎓 Ask me anything about your attendance, today's schedule, exam countdowns, assignment details, placement eligibility, or campus directory navigation details.
+                </div>
+              </div>
+            </div>
+
+            <!-- Typing indicator -->
+            <div id="chatTypingIndicator" class="typing-indicator-container hidden">
+              <div class="typing-bubble glass-panel">
+                <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+              </div>
+            </div>
+
+            <!-- Related Suggestion Chips -->
+            <div class="chat-suggestions-container">
+              <div id="chatSuggestions" class="chat-suggestions-scroll">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Input area -->
+            <div class="chat-input-container">
+              <button id="btnVoiceInput" class="chat-action-btn" title="Voice Input">
+                <i class="bi bi-mic"></i>
+              </button>
+              <textarea id="chatInput" rows="1" placeholder="Ask Zero AI a college question..." autocomplete="off"></textarea>
+              <button id="btnTtsToggle" class="chat-action-btn" title="Text-to-Speech Output">
+                <i class="bi bi-volume-mute"></i>
+              </button>
+              <button id="btnSendMessage" class="chat-send-btn" disabled>
+                <i class="bi bi-send-fill"></i>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. TIMETABLE DETAIL VIEW -->
+        <section id="view-timetable" class="view-pane">
+          <div class="card-detail-layout">
+            <div class="controls-row mb-4">
+              <div class="search-input-wrapper glass-panel">
+                <i class="bi bi-search"></i>
+                <input type="text" id="timetableSearch" placeholder="Search classes by subject (e.g. Physics, Math)...">
+              </div>
+              <div class="view-selectors glass-panel">
+                <button id="btnDayView" class="tab-btn active">Today</button>
+                <button id="btnWeekView" class="tab-btn">Weekly Grid</button>
+              </div>
+            </div>
+
+            <!-- Day schedule list view -->
+            <div id="timetableDayContainer" class="timetable-day-view">
+              <div class="day-selector-pills mb-4">
+                <button class="day-pill active" data-day="Monday">Mon</button>
+                <button class="day-pill" data-day="Tuesday">Tue</button>
+                <button class="day-pill" data-day="Wednesday">Wed</button>
+                <button class="day-pill" data-day="Thursday">Thu</button>
+                <button class="day-pill" data-day="Friday">Fri</button>
+              </div>
+              <div id="timetableDayList" class="timeline-list">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Weekly schedule matrix view -->
+            <div id="timetableWeekContainer" class="timetable-week-view hidden">
+              <div class="table-responsive glass-panel">
+                <table class="timetable-table">
+                  <thead>
+                    <tr>
+                      <th>Time Slot</th>
+                      <th>Monday</th>
+                      <th>Tuesday</th>
+                      <th>Wednesday</th>
+                      <th>Thursday</th>
+                      <th>Friday</th>
+                    </tr>
+                  </thead>
+                  <tbody id="timetableWeekGridBody">
+                    <!-- Dynamically populated matrix -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. ATTENDANCE DETAIL VIEW -->
+        <section id="view-attendance" class="view-pane">
+          <div class="attendance-summary-header glass-panel">
+            <div class="attendance-summary-main">
+              <div class="attendance-dial-container">
+                <svg viewBox="0 0 100 100" class="dial-svg">
+                  <circle cx="50" cy="50" r="42" class="dial-track"></circle>
+                  <circle cx="50" cy="50" r="42" class="dial-fill" id="attendanceDialFill"></circle>
+                  <text x="50" y="55" class="dial-text" id="attendanceDialText">78%</text>
+                </svg>
+              </div>
+              <div>
+                <h2>Overall Attendance</h2>
+                <p>Status: <span id="attendanceSummaryStatus" class="badge badge-success">Good</span></p>
+                <p class="mt-2 text-sm text-slate-400">Maintained: <strong id="totalAttendedClasses">156</strong> out of <strong id="totalClasses">200</strong> lectures.</p>
+              </div>
+            </div>
+            <div id="attendanceCondonationAlert" class="condonation-card border-warning hidden">
+              <h4>⚠️ Attendance Condonation Limit</h4>
+              <p>Your overall attendance is close to the 75% limit. Ensure you do not miss upcoming lectures.</p>
+            </div>
+          </div>
+
+          <div class="attendance-subjects-grid mt-4" id="attendanceSubjectsList">
+            <!-- Dynamically populated subjects list -->
+          </div>
+          
+          <div class="card glass-panel mt-4 padding-md">
+            <h3>Attendance Requirements</h3>
+            <p class="text-sm text-slate-400 mt-2" id="attendanceRequirementsText"></p>
+          </div>
+        </section>
+
+        <!-- 5. EXAM DETAIL VIEW -->
+        <section id="view-exams" class="view-pane">
+          <div class="exams-countdown-row">
+            <div class="exam-countdown-card glass-panel text-center">
+              <h3>Internal Assessment 2</h3>
+              <div class="countdown-timer mt-3" id="examIa2Timer">
+                <div><span id="ia2Days">--</span><p>Days</p></div>
+                <div><span id="ia2Hours">--</span><p>Hrs</p></div>
+                <div><span id="ia2Mins">--</span><p>Mins</p></div>
+              </div>
+              <p class="exam-date-text mt-3">Starts July 20, 2026</p>
+            </div>
+
+            <div class="exam-countdown-card glass-panel text-center">
+              <h3>Semester Exams</h3>
+              <div class="countdown-timer mt-3" id="examSemTimer">
+                <div><span id="semDays">--</span><p>Days</p></div>
+                <div><span id="semHours">--</span><p>Hrs</p></div>
+                <div><span id="semMins">--</span><p>Mins</p></div>
+              </div>
+              <p class="exam-date-text mt-3">Starts August 24, 2026</p>
+            </div>
+          </div>
+
+          <!-- Hall ticket card -->
+          <div class="hall-ticket-card glass-panel mt-4">
+            <div class="hall-ticket-header">
+              <h3>🎟️ Exam Hall Ticket Information</h3>
+              <span class="badge badge-success" id="hallTicketStatus">Available</span>
+            </div>
+            <div class="hall-ticket-details mt-3">
+              <div class="detail-cell">
+                <span class="label">Candidate Name</span>
+                <span class="value" id="hallTicketName">Alex Mercer</span>
+              </div>
+              <div class="detail-cell">
+                <span class="label">Register Number</span>
+                <span class="value" id="hallTicketRegister">26CSE10089</span>
+              </div>
+              <div class="detail-cell">
+                <span class="label">Exam Center</span>
+                <span class="value" id="hallTicketCenter">CSE-BLOCK-MAIN</span>
+              </div>
+            </div>
+            <div class="hall-ticket-instructions mt-3">
+              <strong>Instructions:</strong>
+              <p id="hallTicketInstructions"></p>
+            </div>
+            <button id="btnDownloadHallTicket" class="btn btn-primary mt-4"><i class="bi bi-download"></i> Download Hall Ticket</button>
+          </div>
+
+          <div class="exam-schedule-tabs mt-4">
+            <div class="tab-header glass-panel">
+              <button class="tab-btn active" id="tabIa2">Internal Assessment 2</button>
+              <button class="tab-btn" id="tabSem">Semester End Exams</button>
+            </div>
+            
+            <div class="tab-content mt-3 glass-panel padding-md">
+              <div class="table-responsive">
+                <table class="exam-table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Time</th>
+                      <th>Subject Code</th>
+                      <th>Subject</th>
+                      <th>Room</th>
+                    </tr>
+                  </thead>
+                  <tbody id="examScheduleBody">
+                    <!-- Dynamically populated schedules -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Guidelines -->
+          <div class="card glass-panel mt-4 padding-md">
+            <h3>Exam Guidelines</h3>
+            <ul class="exam-guidelines-list mt-3" id="examGuidelinesList">
+              <!-- Dynamically populated -->
+            </ul>
+          </div>
+        </section>
+
+        <!-- 6. ASSIGNMENTS DETAIL VIEW -->
+        <section id="view-assignments" class="view-pane">
+          <div class="controls-row mb-4">
+            <div class="tab-selector-bubble glass-panel">
+              <button class="tab-btn active" data-asg-filter="all">All Assignments</button>
+              <button class="tab-btn" data-asg-filter="Pending">Pending <span class="badge badge-warning" id="pendingAsgBadge">4</span></button>
+              <button class="tab-btn" data-asg-filter="Submitted">Submitted</button>
+            </div>
+          </div>
+
+          <div id="assignmentsList" class="assignments-list-container">
+            <!-- Dynamically populated -->
+          </div>
+        </section>
+
+        <!-- 7. PLACEMENTS DETAIL VIEW -->
+        <section id="view-placements" class="view-pane">
+          <div class="placement-layout">
+            <div class="placement-main">
+              <h3 class="section-title">Campus Placement Drives</h3>
+              <div id="placementDrivesList" class="drives-container">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+            
+            <div class="placement-sidebar">
+              <div class="card glass-panel padding-md">
+                <h3>Internships</h3>
+                <div id="placementInternshipsList" class="internships-list mt-3">
+                  <!-- Dynamically populated -->
+                </div>
+              </div>
+
+              <div class="card glass-panel padding-md mt-4">
+                <h3>Interview Preparation</h3>
+                <ul class="prep-tips-list mt-3" id="placementPrepTips">
+                  <!-- Dynamically populated -->
+                </ul>
+              </div>
+
+              <div class="card glass-panel padding-md mt-4">
+                <h3>Aptitude Resources</h3>
+                <div id="placementAptitudeResources" class="aptitude-res mt-3">
+                  <!-- Dynamically populated -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 8. FACULTY DIRECTORY VIEW -->
+        <section id="view-faculty" class="view-pane">
+          <div class="controls-row mb-4">
+            <div class="search-input-wrapper glass-panel">
+              <i class="bi bi-search"></i>
+              <input type="text" id="facultySearch" placeholder="Search faculty by name, department, or subject...">
+            </div>
+          </div>
+
+          <div id="facultyGrid" class="faculty-grid-layout">
+            <!-- Dynamically populated -->
+          </div>
+        </section>
+
+        <!-- 9. CAMPUS MAP DETAIL VIEW -->
+        <section id="view-navigation" class="view-pane">
+          <div class="map-layout">
+            <div class="map-sidebar glass-panel">
+              <h3>Campus Hotspots</h3>
+              <div id="mapLocationsList" class="map-locations-scroll mt-3">
+                <!-- Dynamically populated locations -->
+              </div>
+            </div>
+            <div class="map-preview-area glass-panel">
+              <div id="mapPreviewTitle" class="map-preview-header">
+                <h3>Select a Location for Directions</h3>
+                <p>Click on any hotspot on the left to see room details and walking directions.</p>
+              </div>
+              <div id="mapVisualArea" class="map-visual-placeholder">
+                <!-- An interactive stylized vector representation of campus layout -->
+                <svg id="campusInteractiveMap" viewBox="0 0 400 300" width="100%" height="100%">
+                  <!-- Grid -->
+                  <defs>
+                    <pattern id="mapGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/>
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="var(--card-bg)" rx="16" />
+                  <rect width="100%" height="100%" fill="url(#mapGrid)" />
+                  
+                  <!-- Campus Blocks -->
+                  <!-- Gate 1 (Bottom Left) -->
+                  <g class="map-node" data-node="gate1">
+                    <rect x="20" y="240" width="30" height="40" rx="4" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.15)"/>
+                    <text x="35" y="265" font-size="8" fill="var(--text-sub)" text-anchor="middle">Gate 1</text>
+                  </g>
+                  
+                  <!-- Admin Block -->
+                  <g id="map-node-admin" class="map-node" data-node="admin">
+                    <rect x="70" y="200" width="80" height="40" rx="8" fill="rgba(56, 189, 248, 0.15)" stroke="#38bdf8" stroke-width="1.5"/>
+                    <text x="110" y="225" font-size="10" fill="#f8fafc" text-anchor="middle" font-weight="600">Admin Block</text>
+                  </g>
+                  
+                  <!-- Main Canteen (Central) -->
+                  <g id="map-node-canteen" class="map-node" data-node="canteen">
+                    <circle cx="200" cy="150" r="28" fill="rgba(99, 102, 241, 0.15)" stroke="#6366f1" stroke-width="1.5"/>
+                    <text x="200" y="153" font-size="10" fill="#f8fafc" text-anchor="middle" font-weight="600">Canteen</text>
+                  </g>
+
+                  <!-- Block A -->
+                  <g id="map-node-blocka" class="map-node" data-node="blocka">
+                    <rect x="40" y="90" width="70" height="40" rx="8" fill="rgba(255, 255, 255, 0.05)" stroke="rgba(255, 255, 255, 0.15)"/>
+                    <text x="75" y="115" font-size="10" fill="var(--text-sub)" text-anchor="middle">Block A</text>
+                  </g>
+                  
+                  <!-- CSE Block (Top Center) -->
+                  <g id="map-node-cse" class="map-node" data-node="cse">
+                    <rect x="150" y="40" width="100" height="45" rx="8" fill="rgba(20, 184, 166, 0.15)" stroke="#14b8a6" stroke-width="1.5"/>
+                    <text x="200" y="67" font-size="10" fill="#f8fafc" text-anchor="middle" font-weight="600">CSE Block</text>
+                  </g>
+                  
+                  <!-- Science Block (Right) -->
+                  <g id="map-node-science" class="map-node" data-node="science">
+                    <rect x="290" y="100" width="80" height="50" rx="8" fill="rgba(255, 255, 255, 0.05)" stroke="rgba(255, 255, 255, 0.15)"/>
+                    <text x="330" y="128" font-size="10" fill="var(--text-sub)" text-anchor="middle">Science Block</text>
+                  </g>
+
+                  <!-- Block C / Auditorium -->
+                  <g id="map-node-auditorium" class="map-node" data-node="auditorium">
+                    <rect x="260" y="210" width="90" height="45" rx="8" fill="rgba(236, 72, 153, 0.15)" stroke="#ec4899" stroke-width="1.5"/>
+                    <text x="305" y="237" font-size="10" fill="#f8fafc" text-anchor="middle" font-weight="600">Auditorium</text>
+                  </g>
+                  
+                  <!-- Path lines -->
+                  <path d="M 110 200 L 110 150 L 172 150" fill="none" stroke="rgba(56, 189, 248, 0.3)" stroke-width="2" stroke-dasharray="4,4"/>
+                  <path d="M 200 95 L 200 122" fill="none" stroke="rgba(20, 184, 166, 0.3)" stroke-width="2" stroke-dasharray="4,4"/>
+                  <path d="M 228 150 L 290 125" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+                  <path d="M 200 178 L 200 232 L 260 232" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+                </svg>
+              </div>
+              <div id="mapDirectionsDetails" class="map-directions-box hidden">
+                <div class="directions-header">
+                  <h4><i class="bi bi-signpost-split-fill"></i> Walking Directions</h4>
+                </div>
+                <p id="directionsText" class="mt-2"></p>
+                <div class="facilities-tag mt-3" id="directionsFacilities"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 10. LOCAL HISTORY VIEW -->
+        <section id="view-history" class="view-pane">
+          <div class="card-detail-layout">
+            <h3 class="section-title">Saved Conversations</h3>
+            <div id="historySessionsList" class="history-list-wrapper mt-3">
+              <!-- Dynamically populated list of chat sessions -->
+              <div class="empty-state">
+                <i class="bi bi-chat-heart text-slate-500"></i>
+                <p class="mt-2">No saved conversation history found.</p>
+                <button class="btn btn-outline btn-sm mt-3" data-tab-trigger="chat">Start New Chat</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 11. NOTIFICATIONS VIEW -->
+        <section id="view-notifications" class="view-pane">
+          <div class="card-detail-layout">
+            <div class="notifications-header-actions mb-4">
+              <h3 class="section-title">Recent Alerts</h3>
+              <button id="btnClearNotifications" class="btn btn-outline btn-sm">Mark all as read</button>
+            </div>
+            
+            <div id="notificationsList" class="notifications-list-container">
+              <!-- Dynamically populated notifications -->
+            </div>
+          </div>
+        </section>
+
+        <!-- 12. MY PROFILE VIEW -->
+        <section id="view-profile" class="view-pane">
+          <div class="profile-card-large glass-panel">
+            <div class="profile-header-large">
+              <img src="" id="profileLargeAvatar" alt="Student Profile" class="avatar-lg">
+              <div class="profile-meta-large">
+                <h2 id="profileLargeName">Alex Mercer</h2>
+                <span class="badge badge-primary" id="profileLargeSemester">Semester 1</span>
+                <p class="mt-2 text-slate-400" id="profileLargeDept">Computer Science & Engineering</p>
+              </div>
+            </div>
+            
+            <div class="profile-details-grid mt-4">
+              <div class="detail-tile glass-panel">
+                <span>Roll Number</span>
+                <strong id="profileRollNum">CSE-2026-089</strong>
+              </div>
+              <div class="detail-tile glass-panel">
+                <span>Batch Year</span>
+                <strong id="profileBatch">2026 - 2030</strong>
+              </div>
+              <div class="detail-tile glass-panel">
+                <span>CGPA (Current)</span>
+                <strong id="profileCgpa">8.25</strong>
+              </div>
+              <div class="detail-tile glass-panel">
+                <span>Proctor Counselor</span>
+                <strong id="profileProctor">Prof. Arvind Kumar</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="card glass-panel mt-4 padding-md">
+            <h3>Registered Core Subjects</h3>
+            <div class="table-responsive mt-3">
+              <table class="exam-table">
+                <thead>
+                  <tr>
+                    <th>Subject Code</th>
+                    <th>Subject Title</th>
+                    <th>Type</th>
+                    <th>Credits</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>CS-101</td>
+                    <td>Python Programming</td>
+                    <td>Theory & Lab</td>
+                    <td>4.0</td>
+                  </tr>
+                  <tr>
+                    <td>MA-101</td>
+                    <td>Mathematics-I</td>
+                    <td>Theory</td>
+                    <td>4.0</td>
+                  </tr>
+                  <tr>
+                    <td>PH-101</td>
+                    <td>Applied Physics</td>
+                    <td>Theory & Lab</td>
+                    <td>4.0</td>
+                  </tr>
+                  <tr>
+                    <td>CY-101</td>
+                    <td>Engineering Chemistry</td>
+                    <td>Theory & Lab</td>
+                    <td>4.0</td>
+                  </tr>
+                  <tr>
+                    <td>EC-101</td>
+                    <td>Basic Electronics</td>
+                    <td>Theory & Lab</td>
+                    <td>4.0</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 13. SETTINGS VIEW -->
+        <section id="view-settings" class="view-pane">
+          <div class="card-detail-layout">
+            <div class="settings-group glass-panel mb-4">
+              <h3>App Appearance</h3>
+              <div class="settings-row mt-3">
+                <div class="settings-label">
+                  <strong>Interface Theme</strong>
+                  <p>Toggle between Dark mode and Light mode</p>
+                </div>
+                <div class="settings-control">
+                  <!-- Styled switch slider -->
+                  <label class="switch">
+                    <input type="checkbox" id="settingsThemeCheckbox">
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-group glass-panel mb-4">
+              <h3>AI Assistant Preferences</h3>
+              <div class="settings-row mt-3">
+                <div class="settings-label">
+                  <strong>Text-to-Speech</strong>
+                  <p>Read out AI chatbot replies automatically</p>
+                </div>
+                <div class="settings-control">
+                  <label class="switch">
+                    <input type="checkbox" id="settingsTtsCheckbox">
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="settings-row mt-3 border-top pt-3">
+                <div class="settings-label">
+                  <strong>Custom Google Gemini API Key</strong>
+                  <p>Provide your own Gemini API Key to run requests on the client side</p>
+                </div>
+                <div class="settings-control w-full mt-2">
+                  <input type="password" id="settingsApiKey" class="input-text w-full" placeholder="AIzaSy...">
+                  <button id="btnSaveApiKey" class="btn btn-primary btn-sm mt-2">Save Key</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-group glass-panel mb-4">
+              <h3>System and Caches</h3>
+              <div class="settings-row mt-3">
+                <div class="settings-label">
+                  <strong>Local Storage Chat History</strong>
+                  <p>Clear all saved chats and history sessions</p>
+                </div>
+                <div class="settings-control">
+                  <button id="btnClearCacheBtn" class="btn btn-outline btn-danger-text btn-sm">Clear History</button>
+                </div>
+              </div>
+              <div class="settings-row mt-3 border-top pt-3">
+                <div class="settings-label">
+                  <strong>Service Worker Cache</strong>
+                  <p>Clear browser assets cache and force-reload newest code updates</p>
+                </div>
+                <div class="settings-control">
+                  <button id="btnForceReloadSw" class="btn btn-outline btn-sm">Re-sync Offline Cache</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="settings-group glass-panel mb-4">
+              <h3>Keyboard Shortcuts</h3>
+              <div class="shortcuts-grid mt-3">
+                <div class="shortcut-item"><span>Alt + C</span> <p>Open AI Chat View</p></div>
+                <div class="shortcut-item"><span>Alt + D</span> <p>Open Dashboard View</p></div>
+                <div class="shortcut-item"><span>Alt + S</span> <p>Open Settings View</p></div>
+                <div class="shortcut-item"><span>Alt + P</span> <p>Open Profile View</p></div>
+                <div class="shortcut-item"><span>Enter (in chat)</span> <p>Send chat message</p></div>
+                <div class="shortcut-item"><span>Esc</span> <p>Stop text speech voice</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- Bottom Navigation Bar (Mobile) -->
+    <nav class="bottom-nav glass-panel">
+      <a href="#home" class="nav-item active" data-tab="home">
+        <i class="bi bi-grid-1x2"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="#chat" class="nav-item" data-tab="chat">
+        <i class="bi bi-chat-left-text"></i>
+        <span>AI Chat</span>
+      </a>
+      <a href="#timetable" class="nav-item" data-tab="timetable">
+        <i class="bi bi-calendar3"></i>
+        <span>Timetable</span>
+      </a>
+      <a href="#navigation" class="nav-item" data-tab="navigation">
+        <i class="bi bi-map"></i>
+        <span>Map</span>
+      </a>
+      <a href="#profile" class="nav-item" data-tab="profile">
+        <i class="bi bi-person"></i>
+        <span>Profile</span>
+      </a>
+    </nav>
+    
+  </div>
+
+  <!-- Print frame container for exporting chat to PDF -->
+  <iframe id="printFrame" style="display:none;"></iframe>
+
+  <!-- Main JavaScript File -->
+  <script src="app.js"></script>
+</body>
+</html>
